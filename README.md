@@ -81,12 +81,6 @@ Why this stack is strong for internships:
 4. Embedding generation and pgvector storage
 5. Query endpoint: retrieve chunks + answer with citations
 
-### Internship-Level Version
-1. Auth + per-user data isolation
-2. Chat sessions and message persistence
-3. Better retrieval controls (top-k, score threshold, metadata filters)
-4. Async indexing pipeline with status tracking
-5. Unit/integration tests and CI checks
 
 ### Standout Version
 1. Hybrid retrieval (vector + keyword)
