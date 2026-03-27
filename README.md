@@ -81,7 +81,6 @@ Why this stack is strong for internships:
 4. Embedding generation and pgvector storage
 5. Query endpoint: retrieve chunks + answer with citations
 
-
 ### Standout Version
 1. Hybrid retrieval (vector + keyword)
 2. Reranking layer for higher answer quality
@@ -207,5 +206,63 @@ curl -X POST http://localhost:8000/api/v1/documents/upload \
 	-F "file=@./README.md;type=text/plain"
 ```
 
+## 7) Step 3 (Implemented): Parsing + Cleaning + Chunking Pipeline
+
+### Objective
+Turn uploaded documents into structured chunks that can be embedded and retrieved.
+
+### Included
+- Parser layer for text and PDF inputs
+- Text cleaning and normalization
+- Configurable chunking (`CHUNK_SIZE_CHARS`, `CHUNK_OVERLAP_CHARS`)
+- `document_chunks` relational table + migration
+- Ingestion status transitions:
+	- `uploaded` -> `processing` -> `chunked`
+	- `uploaded` -> `processing` -> `failed` (on ingestion errors)
+- Upload response now includes chunk count
+
+### Run New Migration
+
+```bash
+make db-upgrade
+```
+
+## 8) Step 4 (Implemented): Embeddings + Retrieval + Chat Ask
+
+### Objective
+Create the first full RAG query loop: embed chunks, retrieve by semantic similarity, and answer with citations.
+
+### Included
+- Embedding service with two providers:
+	- `openai` for production-style embeddings
+	- `local` deterministic embeddings for offline development/tests
+- `document_chunks.embedding` vector column (pgvector)
+- Retrieval service with PostgreSQL vector search and SQLite fallback scoring
+- `POST /api/v1/chat/ask` endpoint
+- LLM service with two providers:
+	- `openai` for generated responses
+	- `local` grounded fallback for local/dev use
+- Citations in API response (`document_id`, `chunk_id`, `chunk_index`, `score`, `text`)
+
+### Ingestion Status Flow
+- `uploaded`
+- `processing`
+- `embedded`
+- `failed`
+
+### Run New Migration
+
+```bash
+make db-upgrade
+```
+
+### Ask a Question
+
+```bash
+curl -X POST http://localhost:8000/api/v1/chat/ask \
+	-H "Content-Type: application/json" \
+	-d '{"question":"What does this document say about vector search?","top_k":5}'
+```
+
 ### Next Step
-Implement parsing + cleaning + chunking so each uploaded document can be transformed into chunk records for the embedding pipeline.
+Add chat history persistence (sessions/messages), then connect answer generation and retrieval traces to those records for auditability and debugging.

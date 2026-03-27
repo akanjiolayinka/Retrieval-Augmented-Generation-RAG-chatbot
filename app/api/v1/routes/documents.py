@@ -24,5 +24,6 @@ async def upload_document(
         content_type=document.content_type,
         file_size=document.file_size,
         ingestion_status=document.ingestion_status,
+        chunk_count=len(document.chunks),
         created_at=document.created_at,
     )

@@ -5,7 +5,7 @@ from sqlalchemy import engine_from_config, pool
 from alembic import context
 from app.core.config import get_settings
 from app.db.base import Base
-from app.db.models import Document
+from app.db.models import Document, DocumentChunk
 
 config = context.config
 settings = get_settings()
@@ -16,6 +16,7 @@ if config.config_file_name is not None:
 
 # Imported model classes are attached to Base metadata via declarative mapping.
 _ = Document
+_ = DocumentChunk
 
 target_metadata = Base.metadata
 

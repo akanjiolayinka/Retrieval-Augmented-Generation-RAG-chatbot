@@ -26,12 +26,20 @@ class Settings(BaseSettings):
     )
 
     openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
+    embedding_provider: str = Field(default="local", alias="EMBEDDING_PROVIDER")
+    embedding_model: str = Field(default="text-embedding-3-small", alias="EMBEDDING_MODEL")
+    embedding_dimensions: int = Field(default=256, alias="EMBEDDING_DIMENSIONS")
+    retrieval_top_k: int = Field(default=5, alias="RETRIEVAL_TOP_K")
+    llm_provider: str = Field(default="local", alias="LLM_PROVIDER")
+    llm_model: str = Field(default="gpt-4o-mini", alias="LLM_MODEL")
 
     storage_dir: str = Field(default="./data/uploads", alias="STORAGE_DIR")
     max_upload_size_bytes: int = Field(default=10_485_760, alias="MAX_UPLOAD_SIZE_BYTES")
     allowed_upload_content_types: str = Field(
         default="application/pdf,text/plain", alias="ALLOWED_UPLOAD_CONTENT_TYPES"
     )
+    chunk_size_chars: int = Field(default=1200, alias="CHUNK_SIZE_CHARS")
+    chunk_overlap_chars: int = Field(default=200, alias="CHUNK_OVERLAP_CHARS")
 
 
 @lru_cache(maxsize=1)

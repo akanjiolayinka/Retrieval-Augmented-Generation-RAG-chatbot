@@ -9,4 +9,5 @@ class DocumentUploadResponse(BaseModel):
     content_type: str
     file_size: int
     ingestion_status: str
+    chunk_count: int
     created_at: datetime
